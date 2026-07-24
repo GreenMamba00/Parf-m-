@@ -1,1 +1,766 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>İnci Esans - Parfüm Koleksiyonu</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Italiana&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: #1c1210;
+            font-family: 'Inter', sans-serif;
+            color: #f3ece1;
+            padding-bottom: 60px;
+        }
+        /* TÜM STILLER BURADA */
+        .header {
+            padding: 28px 20px 18px;
+            border-bottom: 1px solid #3a2a24;
+            background: linear-gradient(180deg, #2a1a16 0%, #1c1210 100%);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-name {
+            font-family: 'Italiana', 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: #f3ece1;
+        }
+        .tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 15px;
+            color: #b39d7c;
+            margin-top: 6px;
+        }
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 18px 20px 14px;
+            background: #241713;
+            border: 1px solid #3a2a24;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #f3ece1;
+            font-size: 14px;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        .search-input::placeholder {
+            color: #8a7a63;
+        }
+        .add-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: calc(100% - 40px);
+            margin: 0 20px 8px;
+            background: #caa869;
+            color: #1c1210;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
+            padding: 8px 20px 20px;
+        }
+        .card {
+            background: #241713;
+            border: 1px solid #362621;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-image-wrap {
+            position: relative;
+            aspect-ratio: 1/1;
+            background: #2e201b;
+        }
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2e201b 0%, #241713 100%);
+        }
+        .stock-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.02em;
+        }
+        .stock-in {
+            background: rgba(122, 166, 120, 0.9);
+            color: #0f1a0f;
+        }
+        .stock-out {
+            background: rgba(180, 90, 80, 0.9);
+            color: #2a0e0e;
+        }
+        .card-body {
+            padding: 12px 12px 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-brand {
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #b39d7c;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+        .card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f3ece1;
+            line-height: 1.15;
+        }
+        .notes-block {
+            margin-bottom: 10px;
+            flex: 1;
+        }
+        .note-line {
+            font-size: 11.5px;
+            color: #a99a84;
+            margin: 2px 0;
+            line-height: 1.4;
+        }
+        .note-label {
+            color: #caa869;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid #362621;
+        }
+        .price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #caa869;
+        }
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #2e201b;
+            border: 1px solid #3a2a24;
+            border-radius: 7px;
+            color: #d8c9a3;
+            cursor: pointer;
+        }
+        .empty-text {
+            color: #8a7a63;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px 0;
+            grid-column: 1/-1;
+        }
+        .footer {
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px 18px;
+        }
+        .footer-dot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: transparent;
+            border: none;
+            color: #3a2a24;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .footer-admin-active {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid #4a372e;
+            color: #8a7a63;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 11.5px;
+            cursor: pointer;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f3ece1;
+            color: #1c1210;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13.5px;
+            font-weight: 500;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 6, 5, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50;
+        }
+        .modal {
+            background: #241713;
+            border: 1px solid #3a2a24;
+            border-radius: 16px;
+            padding: 22px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #f3ece1;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #a99a84;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .label {
+            display: block;
+            font-size: 12px;
+            color: #b39d7c;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .input {
+            width: 100%;
+            background: #1c1210;
+            border: 1px solid #3a2a24;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #f3ece1;
+            font-size: 14px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        .input:focus {
+            border-color: #caa869;
+        }
+        select.input {
+            appearance: auto;
+            color: #f3ece1;
+        }
+        select.input option {
+            background: #1c1210;
+            color: #f3ece1;
+        }
+        .primary-btn {
+            background: #caa869;
+            color: #1c1210;
+            border: none;
+            border-radius: 9px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .error-text {
+            color: #d18b81;
+            font-size: 12.5px;
+            margin-top: 6px;
+        }
+        .danger-btn {
+            background: #c1665a;
+            color: #fff;
+        }
+        .flex-gap {
+            display: flex;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
 
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        const STORAGE_KEY = "perfumes";
+        const ADMIN_PASSWORD = "parfum2026";
+
+        const emptyForm = {
+            id: null,
+            name: "",
+            brand: "",
+            price: "",
+            top: "",
+            heart: "",
+            base: "",
+            inStock: true,
+            image: "",
+        };
+
+        function uid() {
+            return "p_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+        }
+
+        function App() {
+            const [perfumes, setPerfumes] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [isAdmin, setIsAdmin] = useState(false);
+            const [showLogin, setShowLogin] = useState(false);
+            const [pwInput, setPwInput] = useState("");
+            const [loginError, setLoginError] = useState(false);
+            const [showForm, setShowForm] = useState(false);
+            const [form, setForm] = useState(emptyForm);
+            const [query, setQuery] = useState("");
+            const [confirmDelete, setConfirmDelete] = useState(null);
+            const [saving, setSaving] = useState(false);
+            const [toast, setToast] = useState("");
+
+            useEffect(() => {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        setPerfumes(JSON.parse(saved));
+                    } catch (e) {
+                        setPerfumes([]);
+                    }
+                }
+                setLoading(false);
+            }, []);
+
+            const persist = (list) => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+                setPerfumes(list);
+            };
+
+            const showToast = (msg) => {
+                setToast(msg);
+                setTimeout(() => setToast(""), 2200);
+            };
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (pwInput === ADMIN_PASSWORD) {
+                    setIsAdmin(true);
+                    setShowLogin(false);
+                    setPwInput("");
+                    setLoginError(false);
+                    showToast("Yönetici girişi yapıldı");
+                } else {
+                    setLoginError(true);
+                }
+            };
+
+            const openNewForm = () => {
+                setForm(emptyForm);
+                setShowForm(true);
+            };
+
+            const openEditForm = (p) => {
+                setForm({ ...p, price: String(p.price) });
+                setShowForm(true);
+            };
+
+            const saveForm = (e) => {
+                e.preventDefault();
+                if (!form.name.trim() || !form.brand.trim()) return;
+
+                const list = [...perfumes];
+                const record = {
+                    id: form.id || uid(),
+                    name: form.name.trim(),
+                    brand: form.brand.trim(),
+                    price: form.price ? Number(form.price) : 0,
+                    top: form.top.trim(),
+                    heart: form.heart.trim(),
+                    base: form.base.trim(),
+                    inStock: !!form.inStock,
+                    image: form.image.trim(),
+                    updatedAt: Date.now(),
+                };
+
+                const idx = list.findIndex((p) => p.id === record.id);
+                if (idx >= 0) list[idx] = record;
+                else list.unshift(record);
+
+                persist(list);
+                setShowForm(false);
+                showToast(idx >= 0 ? "Parfüm güncellendi" : "Parfüm eklendi");
+            };
+
+            const deletePerfume = (id) => {
+                const list = perfumes.filter((p) => p.id !== id);
+                persist(list);
+                setConfirmDelete(null);
+                showToast("Parfüm silindi");
+            };
+
+            const filtered = perfumes.filter((p) => {
+                const q = query.trim().toLowerCase();
+                if (!q) return true;
+                return (
+                    p.name.toLowerCase().includes(q) ||
+                    p.brand.toLowerCase().includes(q) ||
+                    p.top.toLowerCase().includes(q) ||
+                    p.heart.toLowerCase().includes(q) ||
+                    p.base.toLowerCase().includes(q)
+                );
+            });
+
+            return (
+                <div>
+                    {/* Header */}
+                    <header className="header">
+                        <div className="header-inner">
+                            <div className="brand-row">
+                                <span style={{ fontSize: 20 }}>✨</span>
+                                <h1 className="brand-name">İnci Esans</h1>
+                            </div>
+                        </div>
+                        <p className="tagline">Koleksiyondaki kokuları keşfedin</p>
+                    </header>
+
+                    {/* Search */}
+                    <div className="search-wrap">
+                        <span style={{ color: '#8a7a63' }}>🔍</span>
+                        <input
+                            className="search-input"
+                            placeholder="İsim, marka veya nota ara…"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Admin add button */}
+                    {isAdmin && (
+                        <button className="add-btn" onClick={openNewForm}>
+                            ➕ Yeni parfüm ekle
+                        </button>
+                    )}
+
+                    {/* Grid */}
+                    <div className="grid">
+                        {loading && <p className="empty-text">Yükleniyor…</p>}
+                        {!loading && filtered.length === 0 && (
+                            <p className="empty-text">
+                                {perfumes.length === 0
+                                    ? isAdmin
+                                        ? "Henüz parfüm eklenmedi. İlk parfümü ekleyerek başlayın."
+                                        : "Koleksiyon şu anda hazırlanıyor."
+                                    : "Aramanızla eşleşen parfüm bulunamadı."}
+                            </p>
+                        )}
+                        {filtered.map((p) => (
+                            <div className="card" key={p.id}>
+                                <div className="card-image-wrap">
+                                    {p.image ? (
+                                        <img src={p.image} alt={p.name} className="card-image" />
+                                    ) : (
+                                        <div className="card-image-placeholder">
+                                            <span style={{ fontSize: 26, color: '#e4d4ac' }}>✨</span>
+                                        </div>
+                                    )}
+                                    <span className={`stock-badge ${p.inStock ? 'stock-in' : 'stock-out'}`}>
+                                        {p.inStock ? "Stokta var" : "Tükendi"}
+                                    </span>
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-brand">{p.brand}</p>
+                                    <h3 className="card-name">{p.name}</h3>
+                                    {(p.top || p.heart || p.base) && (
+                                        <div className="notes-block">
+                                            {p.top && (
+                                                <p className="note-line">
+                                                    <span className="note-label">Üst</span> {p.top}
+                                                </p>
+                                            )}
+                                            {p.heart && (
+                                                <p className="note-line">
+                                                    <span className="note-label">Orta</span> {p.heart}
+                                                </p>
+                                            )}
+                                            {p.base && (
+                                                <p className="note-line">
+                                                    <span className="note-label">Alt</span> {p.base}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+                                    <div className="card-footer">
+                                        <span className="price">
+                                            {p.price ? `${p.price.toLocaleString("tr-TR")} ₺` : "—"}
+                                        </span>
+                                        {isAdmin && (
+                                            <div className="flex-gap">
+                                                <button className="icon-btn" onClick={() => openEditForm(p)}>
+                                                    ✏️
+                                                </button>
+                                                <button className="icon-btn" onClick={() => setConfirmDelete(p.id)} style={{ color: '#c98e85' }}>
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Login modal */}
+                    {showLogin && (
+                        <div className="overlay" onClick={() => setShowLogin(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h2 className="modal-title">Yönetici girişi</h2>
+                                    <button className="close-btn" onClick={() => setShowLogin(false)}>✕</button>
+                                </div>
+                                <form onSubmit={handleLogin}>
+                                    <label className="label">Şifre</label>
+                                    <input
+                                        type="password"
+                                        className="input"
+                                        value={pwInput}
+                                        onChange={(e) => {
+                                            setPwInput(e.target.value);
+                                            setLoginError(false);
+                                        }}
+                                        autoFocus
+                                    />
+                                    {loginError && (
+                                        <p className="error-text">Şifre yanlış, tekrar deneyin.</p>
+                                    )}
+                                    <button type="submit" className="primary-btn" style={{ marginTop: 12, width: '100%' }}>
+                                        Giriş yap
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Add/Edit form modal */}
+                    {showForm && (
+                        <div className="overlay" onClick={() => setShowForm(false)}>
+                            <div className="modal" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h2 className="modal-title">
+                                        {form.id ? "Parfümü düzenle" : "Yeni parfüm"}
+                                    </h2>
+                                    <button className="close-btn" onClick={() => setShowForm(false)}>✕</button>
+                                </div>
+                                <form className="form-grid" onSubmit={saveForm}>
+                                    <div>
+                                        <label className="label">Parfüm adı *</label>
+                                        <input
+                                            className="input"
+                                            value={form.name}
+                                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="label">Marka *</label>
+                                        <input
+                                            className="input"
+                                            value={form.brand}
+                                            onChange={(e) => setForm({ ...form, brand: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-row">
+                                        <div style={{ flex: 1 }}>
+                                            <label className="label">Fiyat (₺)</label>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                className="input"
+                                                value={form.price}
+                                                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                                            />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <label className="label">Stok durumu</label>
+                                            <select
+                                                className="input"
+                                                value={form.inStock ? "1" : "0"}
+                                                onChange={(e) => setForm({ ...form, inStock: e.target.value === "1" })}
+                                            >
+                                                <option value="1">Stokta var</option>
+                                                <option value="0">Tükendi</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="label">Üst nota</label>
+                                        <input
+                                            className="input"
+                                            placeholder="Örn. Bergamot, Limon"
+                                            value={form.top}
+                                            onChange={(e) => setForm({ ...form, top: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="label">Orta nota</label>
+                                        <input
+                                            className="input"
+                                            placeholder="Örn. Yasemin, Gül"
+                                            value={form.heart}
+                                            onChange={(e) => setForm({ ...form, heart: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="label">Alt nota</label>
+                                        <input
+                                            className="input"
+                                            placeholder="Örn. Sandal ağacı, Amber"
+                                            value={form.base}
+                                            onChange={(e) => setForm({ ...form, base: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="label">Fotoğraf URL (opsiyonel)</label>
+                                        <input
+                                            className="input"
+                                            placeholder="https://…"
+                                            value={form.image}
+                                            onChange={(e) => setForm({ ...form, image: e.target.value })}
+                                        />
+                                    </div>
+                                    <button type="submit" className="primary-btn" disabled={saving}>
+                                        {saving ? "Kaydediliyor…" : form.id ? "Değişiklikleri kaydet" : "Parfümü ekle"}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Delete confirm modal */}
+                    {confirmDelete && (
+                        <div className="overlay" onClick={() => setConfirmDelete(null)}>
+                            <div className="modal" style={{ maxWidth: 360 }} onClick={(e) => e.stopPropagation()}>
+                                <h2 className="modal-title">Parfümü sil</h2>
+                                <p style={{ color: "#6b5d48", fontSize: 14, margin: "10px 0 20px", lineHeight: 1.5 }}>
+                                    Bu parfümü kalıcı olarak silmek istediğinize emin misiniz?
+                                </p>
+                                <div style={{ display: "flex", gap: 10 }}>
+                                    <button
+                                        className="primary-btn"
+                                        style={{ flex: 1, marginTop: 0, background: '#4a372e', color: '#f3ece1' }}
+                                        onClick={() => setConfirmDelete(null)}
+                                    >
+                                        Vazgeç
+                                    </button>
+                                    <button
+                                        className="primary-btn danger-btn"
+                                        style={{ flex: 1, marginTop: 0 }}
+                                        onClick={() => deletePerfume(confirmDelete)}
+                                    >
+                                        Sil
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Toast */}
+                    {toast && <div className="toast">{toast}</div>}
+
+                    {/* Footer */}
+                    <footer className="footer">
+                        {isAdmin ? (
+                            <button className="footer-admin-active" onClick={() => setIsAdmin(false)}>
+                                🔓 Yönetici modundan çık
+                            </button>
+                        ) : (
+                            <button className="footer-dot" onClick={() => setShowLogin(true)}>
+                                🔒
+                            </button>
+                        )}
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+
+</body>
+  </html>
