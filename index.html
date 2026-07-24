@@ -21,7 +21,6 @@
             color: #f3ece1;
             padding-bottom: 60px;
         }
-        /* TÜM STILLER BURADA */
         .header {
             padding: 28px 20px 18px;
             border-bottom: 1px solid #3a2a24;
@@ -102,48 +101,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-        }
-        .card-image-wrap {
-            position: relative;
-            aspect-ratio: 1/1;
-            background: #2e201b;
-        }
-        .card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .card-image-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #2e201b 0%, #241713 100%);
-        }
-        .stock-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 20px;
-            letter-spacing: 0.02em;
-        }
-        .stock-in {
-            background: rgba(122, 166, 120, 0.9);
-            color: #0f1a0f;
-        }
-        .stock-out {
-            background: rgba(180, 90, 80, 0.9);
-            color: #2a0e0e;
-        }
-        .card-body {
-            padding: 12px 12px 14px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            padding: 16px;
         }
         .card-brand {
             font-size: 10.5px;
@@ -360,7 +318,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useCallback } = React;
+        const { useState, useEffect } = React;
 
         const STORAGE_KEY = "perfumes";
         const ADMIN_PASSWORD = "parfum2026";
@@ -374,7 +332,6 @@
             heart: "",
             base: "",
             inStock: true,
-            image: "",
         };
 
         function uid() {
@@ -454,7 +411,6 @@
                     heart: form.heart.trim(),
                     base: form.base.trim(),
                     inStock: !!form.inStock,
-                    image: form.image.trim(),
                     updatedAt: Date.now(),
                 };
 
@@ -488,7 +444,6 @@
 
             return (
                 <div>
-                    {/* Header */}
                     <header className="header">
                         <div className="header-inner">
                             <div className="brand-row">
@@ -499,7 +454,6 @@
                         <p className="tagline">Koleksiyondaki kokuları keşfedin</p>
                     </header>
 
-                    {/* Search */}
                     <div className="search-wrap">
                         <span style={{ color: '#8a7a63' }}>🔍</span>
                         <input
@@ -510,14 +464,12 @@
                         />
                     </div>
 
-                    {/* Admin add button */}
                     {isAdmin && (
                         <button className="add-btn" onClick={openNewForm}>
                             ➕ Yeni parfüm ekle
                         </button>
                     )}
 
-                    {/* Grid */}
                     <div className="grid">
                         {loading && <p className="empty-text">Yükleniyor…</p>}
                         {!loading && filtered.length === 0 && (
@@ -531,61 +483,46 @@
                         )}
                         {filtered.map((p) => (
                             <div className="card" key={p.id}>
-                                <div className="card-image-wrap">
-                                    {p.image ? (
-                                        <img src={p.image} alt={p.name} className="card-image" />
-                                    ) : (
-                                        <div className="card-image-placeholder">
-                                            <span style={{ fontSize: 26, color: '#e4d4ac' }}>✨</span>
-                                        </div>
-                                    )}
-                                    <span className={`stock-badge ${p.inStock ? 'stock-in' : 'stock-out'}`}>
-                                        {p.inStock ? "Stokta var" : "Tükendi"}
-                                    </span>
-                                </div>
-                                <div className="card-body">
-                                    <p className="card-brand">{p.brand}</p>
-                                    <h3 className="card-name">{p.name}</h3>
-                                    {(p.top || p.heart || p.base) && (
-                                        <div className="notes-block">
-                                            {p.top && (
-                                                <p className="note-line">
-                                                    <span className="note-label">Üst</span> {p.top}
-                                                </p>
-                                            )}
-                                            {p.heart && (
-                                                <p className="note-line">
-                                                    <span className="note-label">Orta</span> {p.heart}
-                                                </p>
-                                            )}
-                                            {p.base && (
-                                                <p className="note-line">
-                                                    <span className="note-label">Alt</span> {p.base}
-                                                </p>
-                                            )}
-                                        </div>
-                                    )}
-                                    <div className="card-footer">
-                                        <span className="price">
-                                            {p.price ? `${p.price.toLocaleString("tr-TR")} ₺` : "—"}
-                                        </span>
-                                        {isAdmin && (
-                                            <div className="flex-gap">
-                                                <button className="icon-btn" onClick={() => openEditForm(p)}>
-                                                    ✏️
-                                                </button>
-                                                <button className="icon-btn" onClick={() => setConfirmDelete(p.id)} style={{ color: '#c98e85' }}>
-                                                    🗑️
-                                                </button>
-                                            </div>
+                                <p className="card-brand">{p.brand}</p>
+                                <h3 className="card-name">{p.name}</h3>
+                                {(p.top || p.heart || p.base) && (
+                                    <div className="notes-block">
+                                        {p.top && (
+                                            <p className="note-line">
+                                                <span className="note-label">Üst</span> {p.top}
+                                            </p>
+                                        )}
+                                        {p.heart && (
+                                            <p className="note-line">
+                                                <span className="note-label">Orta</span> {p.heart}
+                                            </p>
+                                        )}
+                                        {p.base && (
+                                            <p className="note-line">
+                                                <span className="note-label">Alt</span> {p.base}
+                                            </p>
                                         )}
                                     </div>
+                                )}
+                                <div className="card-footer">
+                                    <span className="price">
+                                        {p.price ? `${p.price.toLocaleString("tr-TR")} ₺` : "—"}
+                                    </span>
+                                    {isAdmin && (
+                                        <div className="flex-gap">
+                                            <button className="icon-btn" onClick={() => openEditForm(p)}>
+                                                ✏️
+                                            </button>
+                                            <button className="icon-btn" onClick={() => setConfirmDelete(p.id)} style={{ color: '#c98e85' }}>
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Login modal */}
                     {showLogin && (
                         <div className="overlay" onClick={() => setShowLogin(false)}>
                             <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -616,7 +553,6 @@
                         </div>
                     )}
 
-                    {/* Add/Edit form modal */}
                     {showForm && (
                         <div className="overlay" onClick={() => setShowForm(false)}>
                             <div className="modal" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
@@ -695,15 +631,6 @@
                                             onChange={(e) => setForm({ ...form, base: e.target.value })}
                                         />
                                     </div>
-                                    <div>
-                                        <label className="label">Fotoğraf URL (opsiyonel)</label>
-                                        <input
-                                            className="input"
-                                            placeholder="https://…"
-                                            value={form.image}
-                                            onChange={(e) => setForm({ ...form, image: e.target.value })}
-                                        />
-                                    </div>
                                     <button type="submit" className="primary-btn" disabled={saving}>
                                         {saving ? "Kaydediliyor…" : form.id ? "Değişiklikleri kaydet" : "Parfümü ekle"}
                                     </button>
@@ -712,7 +639,6 @@
                         </div>
                     )}
 
-                    {/* Delete confirm modal */}
                     {confirmDelete && (
                         <div className="overlay" onClick={() => setConfirmDelete(null)}>
                             <div className="modal" style={{ maxWidth: 360 }} onClick={(e) => e.stopPropagation()}>
@@ -740,10 +666,8 @@
                         </div>
                     )}
 
-                    {/* Toast */}
                     {toast && <div className="toast">{toast}</div>}
 
-                    {/* Footer */}
                     <footer className="footer">
                         {isAdmin ? (
                             <button className="footer-admin-active" onClick={() => setIsAdmin(false)}>
@@ -763,4 +687,4 @@
     </script>
 
 </body>
-  </html>
+</html> 
