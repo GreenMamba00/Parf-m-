@@ -7,320 +7,66 @@
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Italiana&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            min-height: 100vh;
-            background: #1c1210;
-            font-family: 'Inter', sans-serif;
-            color: #f3ece1;
-            padding-bottom: 60px;
-        }
-        .header {
-            padding: 28px 20px 18px;
-            border-bottom: 1px solid #3a2a24;
-            background: linear-gradient(180deg, #2a1a16 0%, #1c1210 100%);
-        }
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .brand-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .brand-name {
-            font-family: 'Italiana', 'Cormorant Garamond', serif;
-            font-size: 28px;
-            font-weight: 400;
-            letter-spacing: 0.06em;
-            color: #f3ece1;
-        }
-        .tagline {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 15px;
-            color: #b39d7c;
-            margin-top: 6px;
-        }
-        .search-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 18px 20px 14px;
-            background: #241713;
-            border: 1px solid #3a2a24;
-            border-radius: 10px;
-            padding: 10px 14px;
-        }
-        .search-input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #f3ece1;
-            font-size: 14px;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-        }
-        .search-input::placeholder {
-            color: #8a7a63;
-        }
-        .add-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            width: calc(100% - 40px);
-            margin: 0 20px 8px;
-            background: #caa869;
-            color: #1c1210;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 14px;
-            padding: 8px 20px 20px;
-        }
-        .card {
-            background: #241713;
-            border: 1px solid #362621;
-            border-radius: 14px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-        }
-        .card-brand {
-            font-size: 10.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #b39d7c;
-            margin-bottom: 2px;
-            font-weight: 600;
-        }
-        .card-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 19px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #f3ece1;
-            line-height: 1.15;
-        }
-        .notes-block {
-            margin-bottom: 10px;
-            flex: 1;
-        }
-        .note-line {
-            font-size: 11.5px;
-            color: #a99a84;
-            margin: 2px 0;
-            line-height: 1.4;
-        }
-        .note-label {
-            color: #caa869;
-            font-weight: 600;
-            margin-right: 4px;
-        }
-        .card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: auto;
-            padding-top: 8px;
-            border-top: 1px solid #362621;
-        }
-        .price {
-            font-size: 14px;
-            font-weight: 600;
-            color: #caa869;
-        }
-        .icon-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: #2e201b;
-            border: 1px solid #3a2a24;
-            border-radius: 7px;
-            color: #d8c9a3;
-            cursor: pointer;
-        }
-        .empty-text {
-            color: #8a7a63;
-            font-size: 14px;
-            text-align: center;
-            padding: 20px 0;
-            grid-column: 1/-1;
-        }
-        .footer {
-            display: flex;
-            justify-content: center;
-            padding: 30px 20px 18px;
-        }
-        .footer-dot {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: transparent;
-            border: none;
-            color: #3a2a24;
-            cursor: pointer;
-            opacity: 0.6;
-        }
-        .footer-admin-active {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: transparent;
-            border: 1px solid #4a372e;
-            color: #8a7a63;
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 11.5px;
-            cursor: pointer;
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #f3ece1;
-            color: #1c1210;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 13.5px;
-            font-weight: 500;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            z-index: 100;
-        }
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 6, 5, 0.72);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 50;
-        }
-        .modal {
-            background: #241713;
-            border: 1px solid #3a2a24;
-            border-radius: 16px;
-            padding: 22px;
-            width: 100%;
-            max-width: 380px;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .modal-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: #f3ece1;
-        }
-        .close-btn {
-            background: transparent;
-            border: none;
-            color: #a99a84;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        .form-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .form-row {
-            display: flex;
-            gap: 10px;
-        }
-        .label {
-            display: block;
-            font-size: 12px;
-            color: #b39d7c;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .input {
-            width: 100%;
-            background: #1c1210;
-            border: 1px solid #3a2a24;
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #f3ece1;
-            font-size: 14px;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-        }
-        .input:focus {
-            border-color: #caa869;
-        }
-        select.input {
-            appearance: auto;
-            color: #f3ece1;
-        }
-        select.input option {
-            background: #1c1210;
-            color: #f3ece1;
-        }
-        .primary-btn {
-            background: #caa869;
-            color: #1c1210;
-            border: none;
-            border-radius: 9px;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-        .error-text {
-            color: #d18b81;
-            font-size: 12.5px;
-            margin-top: 6px;
-        }
-        .danger-btn {
-            background: #c1665a;
-            color: #fff;
-        }
-        .flex-gap {
-            display: flex;
-            gap: 6px;
-        }
+        /* TÜM STILLER AYNI */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #1c1210; font-family: 'Inter', sans-serif; color: #f3ece1; padding-bottom: 60px; }
+        .header { padding: 28px 20px 18px; border-bottom: 1px solid #3a2a24; background: linear-gradient(180deg, #2a1a16 0%, #1c1210 100%); }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; }
+        .brand-row { display: flex; align-items: center; gap: 8px; }
+        .brand-name { font-family: 'Italiana', 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; letter-spacing: 0.06em; color: #f3ece1; }
+        .tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: #b39d7c; margin-top: 6px; }
+        .search-wrap { display: flex; align-items: center; gap: 8px; margin: 18px 20px 14px; background: #241713; border: 1px solid #3a2a24; border-radius: 10px; padding: 10px 14px; }
+        .search-input { background: transparent; border: none; outline: none; color: #f3ece1; font-size: 14px; width: 100%; font-family: 'Inter', sans-serif; }
+        .search-input::placeholder { color: #8a7a63; }
+        .add-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: calc(100% - 40px); margin: 0 20px 8px; background: #caa869; color: #1c1210; border: none; border-radius: 10px; padding: 12px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 8px 20px 20px; }
+        .card { background: #241713; border: 1px solid #362621; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; padding: 16px; }
+        .card-brand { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #b39d7c; margin-bottom: 2px; font-weight: 600; }
+        .card-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; margin-bottom: 8px; color: #f3ece1; line-height: 1.15; }
+        .notes-block { margin-bottom: 10px; flex: 1; }
+        .note-line { font-size: 11.5px; color: #a99a84; margin: 2px 0; line-height: 1.4; }
+        .note-label { color: #caa869; font-weight: 600; margin-right: 4px; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid #362621; }
+        .price { font-size: 14px; font-weight: 600; color: #caa869; }
+        .icon-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #2e201b; border: 1px solid #3a2a24; border-radius: 7px; color: #d8c9a3; cursor: pointer; }
+        .empty-text { color: #8a7a63; font-size: 14px; text-align: center; padding: 20px 0; grid-column: 1/-1; }
+        .footer { display: flex; justify-content: center; padding: 30px 20px 18px; }
+        .footer-dot { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: transparent; border: none; color: #3a2a24; cursor: pointer; opacity: 0.6; }
+        .footer-admin-active { display: flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #4a372e; color: #8a7a63; border-radius: 20px; padding: 6px 12px; font-size: 11.5px; cursor: pointer; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #f3ece1; color: #1c1210; padding: 10px 18px; border-radius: 30px; font-size: 13.5px; font-weight: 500; box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 100; }
+        .overlay { position: fixed; inset: 0; background: rgba(10,6,5,0.72); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+        .modal { background: #241713; border: 1px solid #3a2a24; border-radius: 16px; padding: 22px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: #f3ece1; }
+        .close-btn { background: transparent; border: none; color: #a99a84; cursor: pointer; font-size: 18px; }
+        .form-grid { display: flex; flex-direction: column; gap: 12px; }
+        .form-row { display: flex; gap: 10px; }
+        .label { display: block; font-size: 12px; color: #b39d7c; margin-bottom: 5px; font-weight: 500; }
+        .input { width: 100%; background: #1c1210; border: 1px solid #3a2a24; border-radius: 8px; padding: 10px 12px; color: #f3ece1; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        .input:focus { border-color: #caa869; }
+        select.input { appearance: auto; color: #f3ece1; }
+        select.input option { background: #1c1210; color: #f3ece1; }
+        .primary-btn { background: #caa869; color: #1c1210; border: none; border-radius: 9px; padding: 12px 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 6px; }
+        .error-text { color: #d18b81; font-size: 12.5px; margin-top: 6px; }
+        .danger-btn { background: #c1665a; color: #fff; }
+        .flex-gap { display: flex; gap: 6px; }
+        .loading-spinner { text-align: center; padding: 40px; color: #8a7a63; grid-column: 1/-1; }
     </style>
 </head>
 <body>
-
     <div id="root"></div>
-
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const STORAGE_KEY = "perfumes";
+        // 🔑 BURAYI KENDİ BİLGİLERİNLE DEĞİŞTİR!
+        const SUPABASE_URL = "https://qwofcrvjtphchkexsfrm.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_FxTgpnzBE8Aw8c0mDvl8Qg_shNwqNEs";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const ADMIN_PASSWORD = "parfum2026";
 
         const emptyForm = {
@@ -352,22 +98,27 @@
             const [saving, setSaving] = useState(false);
             const [toast, setToast] = useState("");
 
-            useEffect(() => {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    try {
-                        setPerfumes(JSON.parse(saved));
-                    } catch (e) {
-                        setPerfumes([]);
-                    }
+            // 🔄 Verileri Supabase'den çek
+            const loadPerfumes = async () => {
+                setLoading(true);
+                try {
+                    const { data, error } = await supabase
+                        .from('perfumes')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (error) throw error;
+                    setPerfumes(data || []);
+                } catch (e) {
+                    console.error('Yükleme hatası:', e);
+                    showToast('Veriler yüklenirken hata oluştu.');
+                } finally {
+                    setLoading(false);
                 }
-                setLoading(false);
-            }, []);
-
-            const persist = (list) => {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-                setPerfumes(list);
             };
+
+            useEffect(() => {
+                loadPerfumes();
+            }, []);
 
             const showToast = (msg) => {
                 setToast(msg);
@@ -397,11 +148,12 @@
                 setShowForm(true);
             };
 
-            const saveForm = (e) => {
+            // 💾 Verileri Supabase'e kaydet
+            const saveForm = async (e) => {
                 e.preventDefault();
                 if (!form.name.trim() || !form.brand.trim()) return;
+                setSaving(true);
 
-                const list = [...perfumes];
                 const record = {
                     id: form.id || uid(),
                     name: form.name.trim(),
@@ -411,23 +163,50 @@
                     heart: form.heart.trim(),
                     base: form.base.trim(),
                     inStock: !!form.inStock,
-                    updatedAt: Date.now(),
                 };
 
-                const idx = list.findIndex((p) => p.id === record.id);
-                if (idx >= 0) list[idx] = record;
-                else list.unshift(record);
-
-                persist(list);
-                setShowForm(false);
-                showToast(idx >= 0 ? "Parfüm güncellendi" : "Parfüm eklendi");
+                try {
+                    if (form.id) {
+                        // Güncelle
+                        const { error } = await supabase
+                            .from('perfumes')
+                            .update(record)
+                            .eq('id', form.id);
+                        if (error) throw error;
+                        showToast("Parfüm güncellendi");
+                    } else {
+                        // Ekle
+                        const { error } = await supabase
+                            .from('perfumes')
+                            .insert(record);
+                        if (error) throw error;
+                        showToast("Parfüm eklendi");
+                    }
+                    setShowForm(false);
+                    loadPerfumes(); // Listeyi yenile
+                } catch (e) {
+                    console.error('Kaydetme hatası:', e);
+                    showToast('Kaydedilirken hata oluştu.');
+                } finally {
+                    setSaving(false);
+                }
             };
 
-            const deletePerfume = (id) => {
-                const list = perfumes.filter((p) => p.id !== id);
-                persist(list);
-                setConfirmDelete(null);
-                showToast("Parfüm silindi");
+            // 🗑️ Verileri Supabase'den sil
+            const deletePerfume = async (id) => {
+                try {
+                    const { error } = await supabase
+                        .from('perfumes')
+                        .delete()
+                        .eq('id', id);
+                    if (error) throw error;
+                    setConfirmDelete(null);
+                    showToast("Parfüm silindi");
+                    loadPerfumes(); // Listeyi yenile
+                } catch (e) {
+                    console.error('Silme hatası:', e);
+                    showToast('Silinirken hata oluştu.');
+                }
             };
 
             const filtered = perfumes.filter((p) => {
@@ -436,9 +215,9 @@
                 return (
                     p.name.toLowerCase().includes(q) ||
                     p.brand.toLowerCase().includes(q) ||
-                    p.top.toLowerCase().includes(q) ||
-                    p.heart.toLowerCase().includes(q) ||
-                    p.base.toLowerCase().includes(q)
+                    (p.top && p.top.toLowerCase().includes(q)) ||
+                    (p.heart && p.heart.toLowerCase().includes(q)) ||
+                    (p.base && p.base.toLowerCase().includes(q))
                 );
             });
 
@@ -471,7 +250,7 @@
                     )}
 
                     <div className="grid">
-                        {loading && <p className="empty-text">Yükleniyor…</p>}
+                        {loading && <div className="loading-spinner">⏳ Yükleniyor...</div>}
                         {!loading && filtered.length === 0 && (
                             <p className="empty-text">
                                 {perfumes.length === 0
@@ -487,21 +266,9 @@
                                 <h3 className="card-name">{p.name}</h3>
                                 {(p.top || p.heart || p.base) && (
                                     <div className="notes-block">
-                                        {p.top && (
-                                            <p className="note-line">
-                                                <span className="note-label">Üst</span> {p.top}
-                                            </p>
-                                        )}
-                                        {p.heart && (
-                                            <p className="note-line">
-                                                <span className="note-label">Orta</span> {p.heart}
-                                            </p>
-                                        )}
-                                        {p.base && (
-                                            <p className="note-line">
-                                                <span className="note-label">Alt</span> {p.base}
-                                            </p>
-                                        )}
+                                        {p.top && <p className="note-line"><span className="note-label">Üst</span> {p.top}</p>}
+                                        {p.heart && <p className="note-line"><span className="note-label">Orta</span> {p.heart}</p>}
+                                        {p.base && <p className="note-line"><span className="note-label">Alt</span> {p.base}</p>}
                                     </div>
                                 )}
                                 <div className="card-footer">
@@ -510,12 +277,8 @@
                                     </span>
                                     {isAdmin && (
                                         <div className="flex-gap">
-                                            <button className="icon-btn" onClick={() => openEditForm(p)}>
-                                                ✏️
-                                            </button>
-                                            <button className="icon-btn" onClick={() => setConfirmDelete(p.id)} style={{ color: '#c98e85' }}>
-                                                🗑️
-                                            </button>
+                                            <button className="icon-btn" onClick={() => openEditForm(p)}>✏️</button>
+                                            <button className="icon-btn" onClick={() => setConfirmDelete(p.id)} style={{ color: '#c98e85' }}>🗑️</button>
                                         </div>
                                     )}
                                 </div>
@@ -532,22 +295,9 @@
                                 </div>
                                 <form onSubmit={handleLogin}>
                                     <label className="label">Şifre</label>
-                                    <input
-                                        type="password"
-                                        className="input"
-                                        value={pwInput}
-                                        onChange={(e) => {
-                                            setPwInput(e.target.value);
-                                            setLoginError(false);
-                                        }}
-                                        autoFocus
-                                    />
-                                    {loginError && (
-                                        <p className="error-text">Şifre yanlış, tekrar deneyin.</p>
-                                    )}
-                                    <button type="submit" className="primary-btn" style={{ marginTop: 12, width: '100%' }}>
-                                        Giriş yap
-                                    </button>
+                                    <input type="password" className="input" value={pwInput} onChange={(e) => { setPwInput(e.target.value); setLoginError(false); }} autoFocus />
+                                    {loginError && <p className="error-text">Şifre yanlış, tekrar deneyin.</p>}
+                                    <button type="submit" className="primary-btn" style={{ marginTop: 12, width: '100%' }}>Giriş yap</button>
                                 </form>
                             </div>
                         </div>
@@ -557,83 +307,20 @@
                         <div className="overlay" onClick={() => setShowForm(false)}>
                             <div className="modal" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
                                 <div className="modal-header">
-                                    <h2 className="modal-title">
-                                        {form.id ? "Parfümü düzenle" : "Yeni parfüm"}
-                                    </h2>
+                                    <h2 className="modal-title">{form.id ? "Parfümü düzenle" : "Yeni parfüm"}</h2>
                                     <button className="close-btn" onClick={() => setShowForm(false)}>✕</button>
                                 </div>
                                 <form className="form-grid" onSubmit={saveForm}>
-                                    <div>
-                                        <label className="label">Parfüm adı *</label>
-                                        <input
-                                            className="input"
-                                            value={form.name}
-                                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="label">Marka *</label>
-                                        <input
-                                            className="input"
-                                            value={form.brand}
-                                            onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                                            required
-                                        />
-                                    </div>
+                                    <div><label className="label">Parfüm adı *</label><input className="input" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required /></div>
+                                    <div><label className="label">Marka *</label><input className="input" value={form.brand} onChange={(e) => setForm({...form, brand: e.target.value})} required /></div>
                                     <div className="form-row">
-                                        <div style={{ flex: 1 }}>
-                                            <label className="label">Fiyat (₺)</label>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                className="input"
-                                                value={form.price}
-                                                onChange={(e) => setForm({ ...form, price: e.target.value })}
-                                            />
-                                        </div>
-                                        <div style={{ flex: 1 }}>
-                                            <label className="label">Stok durumu</label>
-                                            <select
-                                                className="input"
-                                                value={form.inStock ? "1" : "0"}
-                                                onChange={(e) => setForm({ ...form, inStock: e.target.value === "1" })}
-                                            >
-                                                <option value="1">Stokta var</option>
-                                                <option value="0">Tükendi</option>
-                                            </select>
-                                        </div>
+                                        <div style={{ flex: 1 }}><label className="label">Fiyat (₺)</label><input type="number" min="0" className="input" value={form.price} onChange={(e) => setForm({...form, price: e.target.value})} /></div>
+                                        <div style={{ flex: 1 }}><label className="label">Stok durumu</label><select className="input" value={form.inStock ? "1" : "0"} onChange={(e) => setForm({...form, inStock: e.target.value === "1"})}><option value="1">Stokta var</option><option value="0">Tükendi</option></select></div>
                                     </div>
-                                    <div>
-                                        <label className="label">Üst nota</label>
-                                        <input
-                                            className="input"
-                                            placeholder="Örn. Bergamot, Limon"
-                                            value={form.top}
-                                            onChange={(e) => setForm({ ...form, top: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="label">Orta nota</label>
-                                        <input
-                                            className="input"
-                                            placeholder="Örn. Yasemin, Gül"
-                                            value={form.heart}
-                                            onChange={(e) => setForm({ ...form, heart: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="label">Alt nota</label>
-                                        <input
-                                            className="input"
-                                            placeholder="Örn. Sandal ağacı, Amber"
-                                            value={form.base}
-                                            onChange={(e) => setForm({ ...form, base: e.target.value })}
-                                        />
-                                    </div>
-                                    <button type="submit" className="primary-btn" disabled={saving}>
-                                        {saving ? "Kaydediliyor…" : form.id ? "Değişiklikleri kaydet" : "Parfümü ekle"}
-                                    </button>
+                                    <div><label className="label">Üst nota</label><input className="input" placeholder="Örn. Bergamot, Limon" value={form.top} onChange={(e) => setForm({...form, top: e.target.value})} /></div>
+                                    <div><label className="label">Orta nota</label><input className="input" placeholder="Örn. Yasemin, Gül" value={form.heart} onChange={(e) => setForm({...form, heart: e.target.value})} /></div>
+                                    <div><label className="label">Alt nota</label><input className="input" placeholder="Örn. Sandal ağacı, Amber" value={form.base} onChange={(e) => setForm({...form, base: e.target.value})} /></div>
+                                    <button type="submit" className="primary-btn" disabled={saving}>{saving ? "Kaydediliyor…" : form.id ? "Değişiklikleri kaydet" : "Parfümü ekle"}</button>
                                 </form>
                             </div>
                         </div>
@@ -643,24 +330,10 @@
                         <div className="overlay" onClick={() => setConfirmDelete(null)}>
                             <div className="modal" style={{ maxWidth: 360 }} onClick={(e) => e.stopPropagation()}>
                                 <h2 className="modal-title">Parfümü sil</h2>
-                                <p style={{ color: "#6b5d48", fontSize: 14, margin: "10px 0 20px", lineHeight: 1.5 }}>
-                                    Bu parfümü kalıcı olarak silmek istediğinize emin misiniz?
-                                </p>
+                                <p style={{ color: "#6b5d48", fontSize: 14, margin: "10px 0 20px", lineHeight: 1.5 }}>Bu parfümü kalıcı olarak silmek istediğinize emin misiniz?</p>
                                 <div style={{ display: "flex", gap: 10 }}>
-                                    <button
-                                        className="primary-btn"
-                                        style={{ flex: 1, marginTop: 0, background: '#4a372e', color: '#f3ece1' }}
-                                        onClick={() => setConfirmDelete(null)}
-                                    >
-                                        Vazgeç
-                                    </button>
-                                    <button
-                                        className="primary-btn danger-btn"
-                                        style={{ flex: 1, marginTop: 0 }}
-                                        onClick={() => deletePerfume(confirmDelete)}
-                                    >
-                                        Sil
-                                    </button>
+                                    <button className="primary-btn" style={{ flex: 1, marginTop: 0, background: '#4a372e', color: '#f3ece1' }} onClick={() => setConfirmDelete(null)}>Vazgeç</button>
+                                    <button className="primary-btn danger-btn" style={{ flex: 1, marginTop: 0 }} onClick={() => deletePerfume(confirmDelete)}>Sil</button>
                                 </div>
                             </div>
                         </div>
@@ -670,13 +343,9 @@
 
                     <footer className="footer">
                         {isAdmin ? (
-                            <button className="footer-admin-active" onClick={() => setIsAdmin(false)}>
-                                🔓 Yönetici modundan çık
-                            </button>
+                            <button className="footer-admin-active" onClick={() => setIsAdmin(false)}>🔓 Yönetici modundan çık</button>
                         ) : (
-                            <button className="footer-dot" onClick={() => setShowLogin(true)}>
-                                🔒
-                            </button>
+                            <button className="footer-dot" onClick={() => setShowLogin(true)}>🔒</button>
                         )}
                     </footer>
                 </div>
@@ -685,6 +354,5 @@
 
         ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
-
 </body>
-</html> 
+</html>
