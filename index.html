@@ -103,7 +103,7 @@
                 setLoading(true);
                 try {
                     const { data, error } = await supabase
-                        .from('perfumes')
+                        .from('Perfumes')
                         .select('*')
                         .order('created_at', { ascending: false });
                     if (error) throw error;
