@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>İnci Esans - Parfüm Koleksiyonu</title>
+    <title>İnci Esans</title>
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Italiana&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* TÜM STILLER AYNI */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { min-height: 100vh; background: #1c1210; font-family: 'Inter', sans-serif; color: #f3ece1; padding-bottom: 60px; }
         .header { padding: 28px 20px 18px; border-bottom: 1px solid #3a2a24; background: linear-gradient(180deg, #2a1a16 0%, #1c1210 100%); }
@@ -61,7 +60,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // 🔑 BURAYI KENDİ BİLGİLERİNLE DEĞİŞTİR!
+        // 🔑 SUPABASE BİLGİLERİ - DOĞRU GİRİLDİ
         const SUPABASE_URL = "https://qwofcrvjtphchkexsfrm.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_FxTgpnzBE8Aw8c0mDvl8Qg_shNwqNEs";
 
@@ -98,12 +97,11 @@
             const [saving, setSaving] = useState(false);
             const [toast, setToast] = useState("");
 
-            // 🔄 Verileri Supabase'den çek
             const loadPerfumes = async () => {
                 setLoading(true);
                 try {
                     const { data, error } = await supabase
-                        .from('Perfumes')
+                        .from('perfumes')
                         .select('*')
                         .order('created_at', { ascending: false });
                     if (error) throw error;
@@ -148,10 +146,12 @@
                 setShowForm(true);
             };
 
-            // 💾 Verileri Supabase'e kaydet
             const saveForm = async (e) => {
                 e.preventDefault();
-                if (!form.name.trim() || !form.brand.trim()) return;
+                if (!form.name.trim() || !form.brand.trim()) {
+                    showToast("Lütfen parfüm adı ve marka girin.");
+                    return;
+                }
                 setSaving(true);
 
                 const record = {
@@ -162,12 +162,11 @@
                     top: form.top.trim(),
                     heart: form.heart.trim(),
                     base: form.base.trim(),
-                    inStock: !!form.inStock,
+                    instock: !!form.inStock,
                 };
 
                 try {
                     if (form.id) {
-                        // Güncelle
                         const { error } = await supabase
                             .from('perfumes')
                             .update(record)
@@ -175,7 +174,6 @@
                         if (error) throw error;
                         showToast("Parfüm güncellendi");
                     } else {
-                        // Ekle
                         const { error } = await supabase
                             .from('perfumes')
                             .insert(record);
@@ -183,16 +181,15 @@
                         showToast("Parfüm eklendi");
                     }
                     setShowForm(false);
-                    loadPerfumes(); // Listeyi yenile
+                    loadPerfumes();
                 } catch (e) {
                     console.error('Kaydetme hatası:', e);
-                    showToast('Kaydedilirken hata oluştu.');
+                    showToast('Kaydedilirken hata oluştu: ' + e.message);
                 } finally {
                     setSaving(false);
                 }
             };
 
-            // 🗑️ Verileri Supabase'den sil
             const deletePerfume = async (id) => {
                 try {
                     const { error } = await supabase
@@ -202,7 +199,7 @@
                     if (error) throw error;
                     setConfirmDelete(null);
                     showToast("Parfüm silindi");
-                    loadPerfumes(); // Listeyi yenile
+                    loadPerfumes();
                 } catch (e) {
                     console.error('Silme hatası:', e);
                     showToast('Silinirken hata oluştu.');
